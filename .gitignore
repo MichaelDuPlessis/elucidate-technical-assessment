@@ -1,3 +1,4 @@
 data/
 .venv/
 Technical Assessment.pdf
+__pycache__/
