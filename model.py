@@ -25,7 +25,7 @@ def extract_data(df: pd.DataFrame, encoding: str="onehot") -> Tuple[pd.DataFrame
 
     # converting the different columns into a numerical value by means of one hot encoding
     category_cols = ["gender", "zipcodeOri", "merchant", "category"]
-    if encoding == "oridnal":
+    if encoding == "ordinal":
         le = LabelEncoder()
         for column in category_cols:
             df[column] = le.fit_transform(df[column])
@@ -46,7 +46,7 @@ def extract_data(df: pd.DataFrame, encoding: str="onehot") -> Tuple[pd.DataFrame
         df.drop(column, axis=1, inplace=True)
         df = df.join(one_hot)
 
-    return df[["age","amount"] + new_columns], df["fraud"]
+    return df[["step", "age","amount"] + new_columns], df["fraud"]
 
 def train_model(x_train, y_train, solver="lbfgs") -> LogisticRegression:
     '''Trains and returns the model'''
@@ -61,12 +61,12 @@ def train_model(x_train, y_train, solver="lbfgs") -> LogisticRegression:
 if __name__ == "__main__":
     # first read the data and perform feature extraction/engineering
     df = read_into_dataframe("./data/bs140513_032310.csv")
-    x_df, y_df = extract_data(df, "mean")
+    x_df, y_df = extract_data(df)
 
     # splitting data into testing an training
     x_train, x_test, y_train, y_test = train_test_split(x_df, y_df, test_size=0.2)
 
-    model = train_model(x_train, y_train, "liblinear")
+    model = train_model(x_train, y_train, "newton-cholesky")
 
     print(model.score(x_test, y_test))
 
