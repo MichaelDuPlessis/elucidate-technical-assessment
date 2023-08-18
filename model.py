@@ -48,8 +48,9 @@ def extract_data(df: pd.DataFrame, encoding: str="onehot") -> Tuple[pd.DataFrame
         df.drop(column, axis=1, inplace=True)
         df = df.join(one_hot)
 
-    return df[["step", "age","amount"] + new_columns], df["fraud"]
+    return df[["age","amount"] + new_columns], df["fraud"]
 
+# solver should be lbfgs, newton-cholesky or liblinear
 def train_model(x_train, y_train, solver="lbfgs") -> LogisticRegression:
     '''Trains and returns the model'''
 
@@ -71,9 +72,10 @@ if __name__ == "__main__":
     model = train_model(x_train, y_train, "newton-cholesky")
 
     print("Threshold = 0.5:", model.score(x_test, y_test))
-    y_pred_new_threshold = (model.predict_proba(x_test)[:, 1] >= 0.99).astype(int)
+    y_pred_new_threshold = (model.predict_proba(x_test)[:, 1] >= 0.75).astype(int)
     print("Threshold = 0.75:", accuracy_score(y_test, y_pred_new_threshold))
 
-    # diagnositcs = list(zip(model.coef_[0], model.feature_names_in_))
-    # diagnositcs.sort(reverse=True, key=lambda x: np.absolute(x[0]))
-    # print(diagnositcs)
+    # looking at what weights were the most important
+    diagnositcs = list(zip(model.coef_[0], model.feature_names_in_))
+    diagnositcs.sort(reverse=True, key=lambda x: np.absolute(x[0]))
+    print(diagnositcs)
