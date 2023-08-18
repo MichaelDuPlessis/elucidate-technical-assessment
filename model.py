@@ -5,6 +5,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score
+import numpy as np
 
 def read_into_dataframe(file_path: str) -> pd.DataFrame:
     '''Reads a csv into a dataframe'''
@@ -68,8 +70,10 @@ if __name__ == "__main__":
 
     model = train_model(x_train, y_train, "newton-cholesky")
 
-    print(model.score(x_test, y_test))
+    print("Threshold = 0.5:", model.score(x_test, y_test))
+    y_pred_new_threshold = (model.predict_proba(x_test)[:, 1] >= 0.99).astype(int)
+    print("Threshold = 0.75:", accuracy_score(y_test, y_pred_new_threshold))
 
     # diagnositcs = list(zip(model.coef_[0], model.feature_names_in_))
-    # diagnositcs.sort()
+    # diagnositcs.sort(reverse=True, key=lambda x: np.absolute(x[0]))
     # print(diagnositcs)
