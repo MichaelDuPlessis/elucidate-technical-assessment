@@ -6,6 +6,10 @@ This project contains the code for my Elucidate AI technical asseessment.
 
 The two main files are model.py and analysis.ipynb. The code is documented but since this was more of a play enviroment using it in production is not advised. Many times I ran things once to see what happened and commented it out. I made use of pandas, numpy, scikit-learn and matplotlib for various parts of this assessment.
 
+### Usage
+
+Please unzip the file in the data directory.
+
 ## model.py
 
 This contains the logisitc regression model that was trained.
